@@ -1,0 +1,81 @@
+<template>
+    <div>
+
+        <b-card-group columns>
+            <b-card
+                v-for="gif in gifs"
+                :key="gif.id" 
+                :img-src="gif.images.fixed_width.url"
+                :img-alt="gif.title" 
+                img-top
+            >
+                <b-card-text>
+                    <a :href="gif.url" target="_blank">{{ gif.title }}</a>
+                </b-card-text>
+            </b-card>
+        </b-card-group >
+
+        <!-- this will be how you do it in the CA to return the data from the API to the web browser
+              you need to go into the vue in the console, then look for the url you need so in this case
+             it is images.fixed_width.url-->
+
+        <!-- <img :src="gifs[1].images.fixed_width.url" alt="" />
+        <p>{{ gifs[1].title}}</p> -->
+    </div>
+</template>
+
+<script>
+import axios from 'axios'
+
+//using constants for the API key instead of ctrl + c the link everytime
+
+const GIPHY_URL = "https://api.giphy.com/v1/gifs";
+const API_KEY = "sxPrhMgOw3mTD4QX68kFHrbLy37OA88P";
+
+    export default{
+        name: 'GiphyViewer',
+        data(){
+            return{
+                gifs:[]
+            };
+        },
+
+        //mounted will run before our method
+        //inside mounted will be where you want to get some data, which is coming from GIPHY
+        //we will do this by using AXIOS 
+
+        
+        mounted(){
+
+            //example of how to write a chain method in javascript
+            axios
+                .get(`${GIPHY_URL}/trending?api_key=${API_KEY}`)
+
+                .then((response) =>{
+                    console.log(response.data.data)
+                    this.gifs = response.data.data
+                })
+
+                .catch(error => console.log(error))
+
+
+                // EXPLINATION OF THE ARROW FUNCTION
+
+                // => is a function. The word before it is the parameter and what comes after is what is returned
+                // eg. material => material.length // (material, param1) => material.length
+
+                // instead of:
+                // function myFun(material, param1){
+                //  return matrial.length
+                // }              
+        },
+
+        methods:{
+
+        }
+    }
+</script>
+
+<style >
+
+</style>
